@@ -1,23 +1,18 @@
 
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 namespace Player
 {
-    public class IdleState : State
+    public class DyingState : State
     {
-
-        private float _horizontalInput;
         // constructor
-        public IdleState(PlayerScript player, StateMachine sm) : base(player, sm)
+        public DyingState(PlayerScript player, StateMachine sm) : base(player, sm)
         {
         }
 
         public override void Enter()
         {
             base.Enter();
-            
-            _horizontalInput = 0f;
-
-            player.anim.Play("arthur_stand", 0, 0);
         }
 
         public override void Exit()
@@ -29,28 +24,20 @@ namespace Player
         {
             base.HandleInput();
         }
-        
+
         public override void LogicUpdate()
         {
+            base.LogicUpdate();
+            player.CheckForIdle();
             player.CheckForRun();
-            player.CheckForDeath();
             player.CheckForCrouch();
             player.CheckForJump();
-            Debug.Log("checking for run");
-            base.LogicUpdate();
-
-            _horizontalInput = Input.GetAxis("Horizontal");
-            if (Mathf.Abs(_horizontalInput) > Mathf.Epsilon)
-            {
-                sm.ChangeState(player.runningState);
-            }
-               
+            Debug.Log("checking for death");
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
         }
-
     }
 }
